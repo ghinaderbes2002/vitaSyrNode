@@ -1,0 +1,529 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// USERS
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  fullName     String
+  role         Role
+  phone        String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  caseRegistrations     CaseRegistration[]
+  appointments          Appointment[]
+  blogPosts             BlogPost[]
+  jobApplications       JobApplication[]
+  partnershipInquiries  PartnershipInquiry[]
+  activityLogs          ActivityLog[]
+  caseNotes             CaseNote[]
+  contactMessages       ContactMessage[]
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  OTHER
+}
+
+
+// CASE REGISTRATIONS
+
+model CaseRegistration {
+  id                 String      @id @default(uuid())
+  fullName           String
+  age                Int
+  gender             Gender
+  phone              String
+  email              String
+  address            String
+  amputationType     String
+  amputationLevel    String
+  amputationDate     DateTime
+  currentCondition   String
+  previousProsthetics Boolean
+  additionalNotes    String?
+  status             CaseStatus
+  priority           Priority
+  assignedToId       String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  assignedTo         User?       @relation(fields: [assignedToId], references: [id])
+  images             CaseImage[]
+  notes              CaseNote[]
+  appointments       Appointment[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum CaseStatus {
+  NEW
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model CaseImage {
+  id         String   @id @default(uuid())
+  caseId     String
+  imageUrl   String
+  imageType  ImageType
+  uploadedAt DateTime @default(now())
+
+  case       CaseRegistration @relation(fields: [caseId], references: [id])
+}
+
+enum ImageType {
+  BEFORE
+  AFTER
+  
+}
+
+model CaseNote {
+  id        String   @id @default(uuid())
+  caseId    String
+  userId    String
+  noteText  String
+  noteType  String
+  createdAt DateTime @default(now())
+
+  case CaseRegistration @relation(fields: [caseId], references: [id])
+  user User             @relation(fields: [userId], references: [id])
+}
+
+
+
+// APPOINTMENTS
+
+model Appointment {
+  id              String   @id @default(uuid())
+  caseId          String?
+  patientName     String
+  phone           String
+  email           String
+  appointmentType AppointmentType
+  appointmentDate DateTime
+  appointmentTime String
+  assignedToId    String?
+  status          AppointmentStatus
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  case       CaseRegistration? @relation(fields: [caseId], references: [id])
+  assignedTo User?             @relation(fields: [assignedToId], references: [id])
+}
+
+
+enum AppointmentType {
+  CONSULTATION
+  FOLLOW_UP
+  OTHER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+// SERVICES
+model Service {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  title       String
+  description String?  // مؤقتًا يمكن أن يكون فارغ
+  serviceType ServiceType
+  metaTitle   String
+  metaDescription String
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  features ServiceFeature[]
+  benefits ServiceBenefit[]
+  images   ServiceImage[]
+}
+
+
+enum ServiceType {
+  PROSTHETICS
+  PHYSIOTHERAPY
+  FOOT_BALANCE
+  OTHER
+}
+
+model ServiceFeature {
+  id        String   @id @default(uuid())
+  serviceId String
+  title     String
+  description String
+  orderIndex Int
+  createdAt DateTime @default(now())
+
+  service   Service  @relation(fields: [serviceId], references: [id])
+}
+
+model ServiceBenefit {
+  id        String   @id @default(uuid())
+  serviceId String
+  benefitText String
+  orderIndex Int
+  createdAt DateTime @default(now())
+
+  service   Service @relation(fields: [serviceId], references: [id])
+}
+
+model ServiceImage {
+  id        String   @id @default(uuid())
+  serviceId String
+  imageUrl  String
+  altText   String?
+  orderIndex Int
+  createdAt DateTime @default(now())
+
+  service   Service @relation(fields: [serviceId], references: [id])
+}
+
+// PRODUCT CATEGORIES & PRODUCTS
+
+model ProductCategory {
+  id              String           @id @default(uuid())
+  name            String
+  slug            String           @unique
+  description     String
+  parentCategoryId String?
+  orderIndex      Int
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  parentCategory  ProductCategory? @relation("CategoryChildren", fields: [parentCategoryId], references: [id])
+  subCategories   ProductCategory[] @relation("CategoryChildren")
+  products        Product[]
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  categoryId      String
+  name            String
+  slug            String   @unique
+  productType     String?
+  description     String
+  specifications  String
+  price           Float
+  isPriceVisible  Boolean  @default(true)
+  metaTitle       String
+  metaDescription String
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category       ProductCategory @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
+  features       ProductFeature[]
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  imageUrl  String
+  altText   String?
+  orderIndex Int
+  isPrimary Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model ProductFeature {
+  id        String   @id @default(uuid())
+  productId String
+  featureText String
+  orderIndex Int
+  createdAt DateTime @default(now())
+
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+
+// SUCCESS STORIES
+model SuccessStory {
+  id                String   @id @default(uuid())
+  patientName       String
+  age               Int
+  caseType          String
+  storyTitle        String
+  storyDescription  String
+  beforeImage       String
+  afterImage        String
+  videoUrl          String?
+  patientTestimonial String
+  orderIndex        Int
+  isFeatured        Boolean @default(false)
+  isActive          Boolean @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  milestones StoryMilestone[]
+}
+
+model StoryMilestone {
+  id          String   @id @default(uuid())
+  storyId     String
+  milestoneType MilestoneType
+  title       String
+  description String
+  imageUrl    String
+  date        DateTime
+  orderIndex  Int
+  createdAt   DateTime @default(now())
+
+  story       SuccessStory @relation(fields: [storyId], references: [id])
+}
+
+enum MilestoneType {
+  BEFORE
+  AFTER
+  OTHER
+}
+
+// BLOG
+model BlogCategory {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String
+  orderIndex  Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id           String   @id @default(uuid())
+  categoryId   String
+  authorId     String
+  title        String
+  slug         String   @unique
+  excerpt      String
+  content      String
+  featuredImage String
+  metaTitle    String
+  metaDescription String
+  status       PostStatus
+  publishedAt  DateTime?
+  viewsCount   Int      @default(0)
+  isFeatured   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  category     BlogCategory @relation(fields: [categoryId], references: [id])
+  author       User         @relation(fields: [authorId], references: [id])
+  tags         BlogTag[]    @relation("BlogPostTags")
+}
+
+model BlogTag {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  posts     BlogPost[] @relation("BlogPostTags")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+
+// SPONSORSHIP CASES
+model SponsorshipCase {
+  id           String   @id @default(uuid())
+  patientName  String
+  age          Int
+  caseDescription String
+  estimatedCost  Float
+  raisedAmount   Float  @default(0)
+  targetAmount   Float
+  caseImage      String
+  videoUrl      String?
+  status        SponsorshipStatus
+  startDate     DateTime
+  endDate       DateTime
+  isFeatured    Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  donations SponsorshipDonation[]
+}
+
+enum SponsorshipStatus {
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+model SponsorshipDonation {
+  id            String   @id @default(uuid())
+  caseId        String
+  donorName     String
+  donorEmail    String
+  donorPhone    String
+  amount        Float
+  paymentMethod String
+  isAnonymous   Boolean @default(false)
+  message       String?
+  paymentStatus PaymentStatus
+  paymentReference String?
+  createdAt     DateTime @default(now())
+
+  case          SponsorshipCase @relation(fields: [caseId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+// JOB APPLICATIONS
+
+model JobApplication {
+  id                String   @id @default(uuid())
+  fullName          String
+  email             String
+  phone             String
+  specialization    String
+  yearsOfExperience Int
+  education         String
+  cvFileUrl         String
+  coverLetter       String?
+  linkedinUrl       String?
+  status            JobStatus
+  reviewedById      String?
+  reviewNotes       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  reviewedBy User? @relation(fields: [reviewedById], references: [id])
+}
+
+enum JobStatus {
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
+}
+
+// PARTNERSHIP INQUIRIES
+
+model PartnershipInquiry {
+  id               String   @id @default(uuid())
+  organizationName String
+  contactPerson    String
+  email            String
+  phone            String
+  partnershipType  PartnershipType
+  country          String
+  inquiryDetails   String
+  status           InquiryStatus
+  assignedToId     String?
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  assignedTo User? @relation(fields: [assignedToId], references: [id])
+}
+
+enum PartnershipType {
+  MEDICAL
+  INVESTMENT
+  OTHER
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+
+// CONTACT MESSAGES
+model ContactMessage {
+  id          String   @id @default(uuid())
+  fullName    String
+  email       String
+  phone       String
+  subject     String
+  message     String
+  status      MessageStatus
+  repliedById String?
+  replyMessage String?
+  repliedAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  repliedBy User? @relation(fields: [repliedById], references: [id])
+}
+
+enum MessageStatus {
+  NEW
+  REPLIED
+  CLOSED
+}
+
+
+// ACTIVITY LOGS
+model ActivityLog {
+  id         String   @id @default(uuid())
+  userId     String
+  actionType String
+  entityType String
+  entityId   String
+  description String
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user       User @relation(fields: [userId], references: [id])
+}
+//////الشركاء
+model Partner {
+  id        String   @id @default(uuid())
+  name      String
+  logoUrl   String
+  website   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+// enum ProductType {
+//   PROSTHETIC
+//   ACCESSORY
+//   OTHER
+// }
