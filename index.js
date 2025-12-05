@@ -12,6 +12,10 @@ import partnersRoute from "./routes/admin/partnersRoute.js";
 import productsRoute from "./routes/admin/productsRoute.js";
 import servicesRoute from "./routes/admin/servicesRoutes.js";
 import successStoriesRoute from "./routes/admin/successStoriesRoutes.js";
+import sponsorshipRoute from "./routes/admin/sponsorshipRoutes.js";
+
+
+
 
 const app = express();
 const prisma = new PrismaClient();
@@ -52,6 +56,32 @@ app.use("/successStories", successStoriesRoute);
 app.use("/jobs", jobsRoute);
 app.use("/partnerships", partnershipsRoute);
 app.use("/contact", contactRoute);
+app.use("/sponsorship", sponsorshipRoute);
+
 
 const PORT = process.env.PORT || 3010;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Error handling
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Health check available at http://localhost:${PORT}/health`);
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close(async () => {
+    await prisma.$disconnect();
+    console.log('HTTP server closed');
+  });
+});

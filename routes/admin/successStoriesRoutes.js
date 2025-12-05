@@ -18,7 +18,7 @@ const router = express.Router();
 // =======================
 // قصص النجاح Success Stories
 // =======================
-router.get("/success-stories", verifyToken, isAdmin, getAllStories);
+router.get("/success-stories", getAllStories);
 
 router.post(
   "/success-stories",
@@ -32,7 +32,7 @@ router.post(
   createStory
 );
 
-router.get("/success-stories/:id", verifyToken, isAdmin, getStoryById);
+router.get("/success-stories/:id",  getStoryById);
 
 router.put(
   "/success-stories/:id",
