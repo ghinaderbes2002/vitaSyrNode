@@ -91,14 +91,15 @@ export const createPost = async (req, res) => {
       slug,
       excerpt,
       content,
-      featuredImage,
       metaTitle,
       metaDescription,
       status,
       publishedAt,
       isFeatured,
-      tags, // array of tag IDs
+      tags,
     } = req.body;
+
+    const featuredImage = req.file ? req.file.filename : null;
 
     const post = await prisma.blogPost.create({
       data: {
@@ -113,10 +114,10 @@ export const createPost = async (req, res) => {
         metaDescription,
         status,
         publishedAt,
-        isFeatured,
+        isFeatured: isFeatured === "true" || isFeatured === true,
         tags: tags
           ? {
-              connect: tags.map((id) => ({ id })),
+              connect: JSON.parse(tags).map((id) => ({ id })),
             }
           : undefined,
       },
@@ -153,6 +154,7 @@ export const getPostById = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
+
     const {
       categoryId,
       authorId,
@@ -160,14 +162,15 @@ export const updatePost = async (req, res) => {
       slug,
       excerpt,
       content,
-      featuredImage,
       metaTitle,
       metaDescription,
       status,
       publishedAt,
       isFeatured,
-      tags, // array of tag IDs
+      tags,
     } = req.body;
+
+    const featuredImage = req.file ? req.file.filename : undefined;
 
     const updated = await prisma.blogPost.update({
       where: { id },
@@ -178,16 +181,16 @@ export const updatePost = async (req, res) => {
         slug,
         excerpt,
         content,
-        featuredImage,
         metaTitle,
         metaDescription,
         status,
         publishedAt,
-        isFeatured,
+        isFeatured: isFeatured === "true" || isFeatured === true,
+        featuredImage,
         tags: tags
           ? {
-              set: [], // clear old tags
-              connect: tags.map((id) => ({ id })),
+              set: [],
+              connect: JSON.parse(tags).map((id) => ({ id })),
             }
           : undefined,
       },
