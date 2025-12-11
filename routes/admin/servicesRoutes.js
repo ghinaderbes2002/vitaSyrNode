@@ -21,7 +21,7 @@ import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer 
 const router = express.Router();
 
 // الخدمات الأساسية
-router.get("/", verifyToken, isAdmin, getAllServices);
+router.get("/",  getAllServices);
 router.post("/", verifyToken, isAdmin, createService);
 router.get("/:id", verifyToken, isAdmin, getServiceById);
 router.put("/:id", verifyToken, isAdmin, updateService);
