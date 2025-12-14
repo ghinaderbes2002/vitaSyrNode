@@ -30,7 +30,7 @@ router.delete("/blog-categories/:id", verifyToken, isAdmin, deleteCategory);
 // =======================
 // المقالات
 // =======================
-router.get("/blog-posts", verifyToken, isAdmin, getAllPosts);
+router.get("/blog-posts",  getAllPosts);
 
 router.post(
   "/blog-posts",

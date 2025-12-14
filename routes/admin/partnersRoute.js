@@ -16,7 +16,7 @@ router.get("/", getAllPartners);
 
 // CRUD للادمن
 router.post("/", verifyToken, isAdmin, upload.single("logo"), createPartner);
-router.get("/:id", verifyToken, isAdmin, getPartnerById);
+router.get("/:id", getPartnerById);
 router.put("/:id", verifyToken, isAdmin, upload.single("logo"), updatePartner);
 router.delete("/:id", verifyToken, isAdmin, deletePartner);
 
