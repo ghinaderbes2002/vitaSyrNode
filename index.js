@@ -16,7 +16,9 @@ import sponsorshipRoute from "./routes/admin/sponsorshipRoutes.js";
 
 const app = express();
 const prisma = new PrismaClient();
+// ... باقي الاستيرادات كما هي
 
+// Middleware
 app.use(
   cors({
     origin: "https://vitaxirpro.com",
@@ -26,10 +28,9 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-// Health check endpoint for Docker
+// Health check endpoint
 app.get("/health", async (req, res) => {
   try {
-    // Check database connection
     await prisma.$queryRaw`SELECT 1`;
     res.status(200).json({
       status: "healthy",
@@ -47,18 +48,19 @@ app.get("/health", async (req, res) => {
   }
 });
 
-app.use("/auth", authRoute);
-app.use("/services", servicesRoute);
-app.use("/products", productsRoute);
-app.use("/blog", blogRoute);
-app.use("/partners", partnersRoute);
-app.use("/cases", casesRoute);
-app.use("/appointments", appointmentsRoute);
-app.use("/successStories", successStoriesRoute);
-app.use("/jobs", jobsRoute);
-app.use("/partnerships", partnershipsRoute);
-app.use("/contact", contactRoute);
-app.use("/sponsorship", sponsorshipRoute);
+// إضافة /api/ prefix لجميع الـ routes
+app.use("/api/auth", authRoute);
+app.use("/api/services", servicesRoute);
+app.use("/api/products", productsRoute);
+app.use("/api/blog", blogRoute);
+app.use("/api/partners", partnersRoute);
+app.use("/api/cases", casesRoute);
+app.use("/api/appointments", appointmentsRoute);
+app.use("/api/successStories", successStoriesRoute);
+app.use("/api/jobs", jobsRoute);
+app.use("/api/partnerships", partnershipsRoute);
+app.use("/api/contact", contactRoute);
+app.use("/api/sponsorship", sponsorshipRoute);
 
 const PORT = process.env.PORT || 3010;
 
