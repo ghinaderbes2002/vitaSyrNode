@@ -48,19 +48,19 @@ app.get("/health", async (req, res) => {
   }
 });
 
-// إضافة /api/ prefix لجميع الـ routes
-app.use("/api/auth", authRoute);
-app.use("/api/services", servicesRoute);
-app.use("/api/products", productsRoute);
-app.use("/api/blog", blogRoute);
-app.use("/api/partners", partnersRoute);
-app.use("/api/cases", casesRoute);
-app.use("/api/appointments", appointmentsRoute);
-app.use("/api/successStories", successStoriesRoute);
-app.use("/api/jobs", jobsRoute);
-app.use("/api/partnerships", partnershipsRoute);
-app.use("/api/contact", contactRoute);
-app.use("/api/sponsorship", sponsorshipRoute);
+// إضافة / prefix لجميع الـ routes
+app.use("/auth", authRoute);
+app.use("/services", servicesRoute);
+app.use("/products", productsRoute);
+app.use("/blog", blogRoute);
+app.use("/partners", partnersRoute);
+app.use("/cases", casesRoute);
+app.use("/appointments", appointmentsRoute);
+app.use("/successStories", successStoriesRoute);
+app.use("/jobs", jobsRoute);
+app.use("/partnerships", partnershipsRoute);
+app.use("/contact", contactRoute);
+app.use("/sponsorship", sponsorshipRoute);
 
 const PORT = process.env.PORT || 3010;
 
