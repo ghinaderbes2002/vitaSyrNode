@@ -15,6 +15,8 @@ import {
   deleteFeature,
   addImage,
   deleteImage,
+  addVideo,
+  deleteVideo,
 } from "../../controllers/admin/productsController.js";
 import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
 
@@ -63,5 +65,17 @@ router.post(
   addImage
 );
 router.delete("/products/:id/images/:imgid", verifyToken, isAdmin, deleteImage);
+
+// =======================
+// الفيديوهات Videos
+// =======================
+router.post(
+  "/products/:id/videos",
+  verifyToken,
+  isAdmin,
+  upload.single("video"),
+  addVideo
+);
+router.delete("/products/:id/videos/:vid", verifyToken, isAdmin, deleteVideo);
 
 export default router;

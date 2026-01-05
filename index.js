@@ -21,7 +21,11 @@ const prisma = new PrismaClient();
 // Middleware
 app.use(
   cors({
-    origin: "https://vitaxirpro.com",
+    
+    origin: ["https://vitaxirpro.com",
+          'http://localhost:3001',
+
+    ],
     credentials: true,
   })
 );

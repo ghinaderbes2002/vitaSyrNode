@@ -72,7 +72,6 @@ export const getAllPosts = async (req, res) => {
       include: {
         category: true,
         author: true,
-        tags: true,
       },
     });
 
@@ -96,10 +95,9 @@ export const createPost = async (req, res) => {
       status,
       publishedAt,
       isFeatured,
-      tags,
     } = req.body;
 
-    const featuredImage = req.file ? req.file.filename : null;
+    const featuredImage = req.file ? `/uploads/${req.file.filename}` : null;
 
     const post = await prisma.blogPost.create({
       data: {
@@ -115,14 +113,6 @@ export const createPost = async (req, res) => {
         status,
         publishedAt,
         isFeatured: isFeatured === "true" || isFeatured === true,
-        tags: tags
-          ? {
-              connect: JSON.parse(tags).map((id) => ({ id })),
-            }
-          : undefined,
-      },
-      include: {
-        tags: true,
       },
     });
 
@@ -141,7 +131,6 @@ export const getPostById = async (req, res) => {
       include: {
         category: true,
         author: true,
-        tags: true,
       },
     });
 
@@ -167,10 +156,9 @@ export const updatePost = async (req, res) => {
       status,
       publishedAt,
       isFeatured,
-      tags,
     } = req.body;
 
-    const featuredImage = req.file ? req.file.filename : undefined;
+    const featuredImage = req.file ? `/uploads/${req.file.filename}` : undefined;
 
     const updated = await prisma.blogPost.update({
       where: { id },
@@ -187,14 +175,7 @@ export const updatePost = async (req, res) => {
         publishedAt,
         isFeatured: isFeatured === "true" || isFeatured === true,
         featuredImage,
-        tags: tags
-          ? {
-              set: [],
-              connect: JSON.parse(tags).map((id) => ({ id })),
-            }
-          : undefined,
       },
-      include: { tags: true },
     });
 
     res.json(updated);
@@ -210,52 +191,6 @@ export const deletePost = async (req, res) => {
     await prisma.blogPost.delete({ where: { id } });
 
     res.json({ message: "Post deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-//
-// =======================
-// الوسوم Tags
-// =======================
-//
-
-export const getAllTags = async (req, res) => {
-  try {
-    const tags = await prisma.blogTag.findMany({
-      orderBy: { name: "asc" },
-    });
-
-    res.json(tags);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const createTag = async (req, res) => {
-  try {
-    const { name, slug } = req.body;
-
-    const tag = await prisma.blogTag.create({
-      data: { name, slug },
-    });
-
-    res.status(201).json(tag);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-export const deleteTag = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    await prisma.blogTag.delete({
-      where: { id },
-    });
-
-    res.json({ message: "Tag deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

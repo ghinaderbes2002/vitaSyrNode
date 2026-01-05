@@ -243,7 +243,9 @@ model Product {
   category       ProductCategory @relation(fields: [categoryId], references: [id])
   images         ProductImage[]
   features       ProductFeature[]
+  videos         ProductVideo[]   // <-- هنا أضفنا الفيديوهات
 }
+
 
 model ProductImage {
   id        String   @id @default(uuid())
@@ -266,41 +268,56 @@ model ProductFeature {
 
   product   Product @relation(fields: [productId], references: [id])
 }
+model ProductVideo {
+  id        String   @id @default(uuid())
+  productId String
+  videoUrl  String
+  isPrimary Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  product   Product @relation(fields: [productId], references: [id])
+}
 
 
 // SUCCESS STORIES
 model SuccessStory {
-  id                String   @id @default(uuid())
+  id                String        @id @default(uuid())
+  storyType         StoryType     @default(MEDICAL)  // جديد
   patientName       String
-  age               Int
-  caseType          String
+  age               Int?          // اختياري للقصص غير الطبية
+  caseType          String?       // اختياري للقصص غير الطبية
   storyTitle        String
   storyDescription  String
-  beforeImage       String
-  afterImage        String
+  beforeImage       String?
+  afterImage        String?
   videoUrl          String?
   patientTestimonial String
   orderIndex        Int
-  isFeatured        Boolean @default(false)
-  isActive          Boolean @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  isFeatured        Boolean      @default(false)
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   milestones StoryMilestone[]
 }
 
-model StoryMilestone {
-  id          String   @id @default(uuid())
-  storyId     String
-  milestoneType MilestoneType
-  title       String
-  description String
-  imageUrl    String
-  date        DateTime
-  orderIndex  Int
-  createdAt   DateTime @default(now())
+enum StoryType {
+  MEDICAL        // قصص طبية (مرضى - قبل/بعد)
+  INSPIRATIONAL  // قصص إلهام (طبيب، موظف، متطوع)
+}
 
-  story       SuccessStory @relation(fields: [storyId], references: [id])
+model StoryMilestone {
+  id            String        @id @default(uuid())
+  storyId       String
+  milestoneType MilestoneType
+  title         String
+  description   String
+  imageUrl      String?       // اختياري
+  date          DateTime
+  orderIndex    Int
+  createdAt     DateTime      @default(now())
+
+  story         SuccessStory  @relation(fields: [storyId], references: [id])
 }
 
 enum MilestoneType {
@@ -324,35 +341,28 @@ model BlogCategory {
 }
 
 model BlogPost {
-  id           String   @id @default(uuid())
-  categoryId   String
-  authorId     String
-  title        String
-  slug         String   @unique
-  excerpt      String
-  content      String
-  featuredImage String
-  metaTitle    String
+  id             String   @id @default(uuid())
+  categoryId     String
+  authorId       String
+  title          String
+  slug           String   @unique
+  excerpt        String
+  content        String
+  featuredImage  String
+  metaTitle      String
   metaDescription String
-  status       PostStatus
-  publishedAt  DateTime?
-  viewsCount   Int      @default(0)
-  isFeatured   Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  status         PostStatus
+  publishedAt    DateTime?
+  viewsCount     Int      @default(0)
+  isFeatured     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  category     BlogCategory @relation(fields: [categoryId], references: [id])
-  author       User         @relation(fields: [authorId], references: [id])
-  tags         BlogTag[]    @relation("BlogPostTags")
+  category       BlogCategory @relation(fields: [categoryId], references: [id])
+  author         User         @relation(fields: [authorId], references: [id])
 }
 
-model BlogTag {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  posts     BlogPost[] @relation("BlogPostTags")
-}
+
 
 enum PostStatus {
   DRAFT

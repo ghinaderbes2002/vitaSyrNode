@@ -100,6 +100,7 @@ export const getAllProducts = async (req, res) => {
         images: true,
         features: true,
         category: true,
+        videos: true,
       },
     });
 
@@ -157,6 +158,7 @@ export const getProductById = async (req, res) => {
         images: true,
         features: true,
         category: true,
+        videos: true,
       },
     });
 
@@ -296,6 +298,58 @@ export const deleteImage = async (req, res) => {
     });
 
     res.json({ message: "Image deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// =======================
+// الفيديوهات Videos
+// =======================
+
+export const addVideo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isPrimary } = req.body;
+
+    // التحقق من وجود ملف الفيديو
+    const videoUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!videoUrl) {
+      return res.status(400).json({ message: "Video file is required" });
+    }
+
+    // إذا تم إرسال isPrimary = true لازم نلغي الباقي
+    if (isPrimary === "true" || isPrimary === true) {
+      await prisma.productVideo.updateMany({
+        where: { productId: id },
+        data: { isPrimary: false },
+      });
+    }
+
+    const video = await prisma.productVideo.create({
+      data: {
+        productId: id,
+        videoUrl,
+        isPrimary: isPrimary === "true" || isPrimary === true,
+      },
+    });
+
+    res.status(201).json(video);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteVideo = async (req, res) => {
+  try {
+    const { vid } = req.params;
+
+    await prisma.productVideo.delete({
+      where: { id: vid },
+    });
+
+    res.json({ message: "Video deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

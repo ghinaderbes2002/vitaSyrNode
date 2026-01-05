@@ -9,9 +9,6 @@ import {
   getPostById,
   updatePost,
   deletePost,
-  getAllTags,
-  createTag,
-  deleteTag,
 } from "../../controllers/admin/blogController.js";
 
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
@@ -51,12 +48,5 @@ router.put(
 );
 
 router.delete("/blog-posts/:id", verifyToken, isAdmin, deletePost);
-
-// =======================
-// الوسوم
-// =======================
-router.get("/blog-tags", verifyToken, isAdmin, getAllTags);
-router.post("/blog-tags", verifyToken, isAdmin, createTag);
-router.delete("/blog-tags/:id", verifyToken, isAdmin, deleteTag);
 
 export default router;
