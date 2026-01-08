@@ -24,7 +24,7 @@ app.use(
     origin: [
       "https://vitaxirpro.com",
       "http://localhost:3001",
-      "http://217.76.53.136:3011",
+      "http://217.76.53.136:3010",
     ],
     credentials: true,
   })
