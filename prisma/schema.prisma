@@ -154,7 +154,7 @@ model Service {
   slug        String          @unique
   title       String
   description String?  // مؤقتًا يمكن أن يكون فارغ
-  serviceType ServiceType
+  serviceType String?
   metaTitle   String
   metaDescription String
   isActive    Boolean         @default(true)
@@ -166,19 +166,11 @@ model Service {
   images   ServiceImage[]
 }
 
-
-enum ServiceType {
-  PROSTHETICS
-  PHYSIOTHERAPY
-  FOOT_BALANCE
-  OTHER
-}
-
 model ServiceFeature {
   id        String   @id @default(uuid())
   serviceId String
   title     String
-  description String
+  description String?
   orderIndex Int
   createdAt DateTime @default(now())
 
