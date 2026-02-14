@@ -40,8 +40,8 @@ services:
     ports:
       - "${APP_PORT:-3010}:3010"
     environment:
-      DATABASE_URL: postgresql://postgres:2025$Secure@postgres:5432/vitasyr?schema=public&connect_timeout=30
-      # DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vitasyr}?schema=public&connect_timeout=30
+      # DATABASE_URL: postgresql://postgres:2025$Secure@postgres:5432/vitasyr?schema=public&connect_timeout=30
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vitasyr}?schema=public&connect_timeout=30
       NODE_ENV: ${NODE_ENV:-production}
       PORT: 3010
       JWT_SECRET: ${JWT_SECRET}
