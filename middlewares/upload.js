@@ -29,7 +29,12 @@ const fileFilter = (req, file, cb) => {
     return cb(null, true);
   }
 
-  cb(new Error('Only image and video files are allowed!'));
+  // التحقق من ملفات PDF (للسير الذاتية)
+  if (mimetype === 'application/pdf' && extname === '.pdf') {
+    return cb(null, true);
+  }
+
+  cb(new Error('Only image, video, and PDF files are allowed!'));
 };
 
 export const upload = multer({

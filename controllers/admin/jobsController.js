@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import path from "path";
+import { sendJobApplicationNotification } from "../../utils/emailService.js";
 const prisma = new PrismaClient();
 
 // Job Applications
@@ -53,6 +55,20 @@ export const createApplication = async (req, res) => {
         linkedinUrl: linkedinUrl || null,
         status: "PENDING",
       },
+    });
+
+    // إرسال إيميل مع CV كمرفق
+    const cvFilePath = req.file ? path.resolve(req.file.path) : null;
+    sendJobApplicationNotification({
+      fullName,
+      email,
+      phone,
+      specialization,
+      yearsOfExperience,
+      education,
+      coverLetter,
+      linkedinUrl,
+      cvFilePath,
     });
 
     res.status(201).json(application);

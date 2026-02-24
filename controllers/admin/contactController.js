@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { sendContactNotification } from "../../utils/emailService.js";
 const prisma = new PrismaClient();
 
 // --- جلب كل الرسائل ---
@@ -18,8 +19,18 @@ export const getAllMessages = async (req, res) => {
 export const createMessage = async (req, res) => {
   try {
     const data = req.body;
-    data.status = "NEW"; // كل رسالة جديدة تكون NEW
+    data.status = "NEW";
     const message = await prisma.contactMessage.create({ data });
+
+    // إرسال إشعار بالإيميل (في الخلفية - ما يأثر على الرد)
+    sendContactNotification({
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      subject: data.subject,
+      message: data.message,
+    });
+
     res.status(201).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });

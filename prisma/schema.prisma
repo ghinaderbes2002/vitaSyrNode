@@ -174,7 +174,7 @@ model ServiceFeature {
   orderIndex Int
   createdAt DateTime @default(now())
 
-  service   Service  @relation(fields: [serviceId], references: [id])
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model ServiceBenefit {
@@ -184,7 +184,7 @@ model ServiceBenefit {
   orderIndex Int
   createdAt DateTime @default(now())
 
-  service   Service @relation(fields: [serviceId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model ServiceImage {
@@ -195,7 +195,7 @@ model ServiceImage {
   orderIndex Int
   createdAt DateTime @default(now())
 
-  service   Service @relation(fields: [serviceId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 // PRODUCT CATEGORIES & PRODUCTS
