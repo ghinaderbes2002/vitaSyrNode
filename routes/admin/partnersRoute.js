@@ -7,7 +7,7 @@ import {
   deletePartner,
 } from "../../controllers/admin/partnersController.js";
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
-import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
+import { upload, compressImage } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
 
 const router = express.Router();
 
@@ -15,9 +15,9 @@ const router = express.Router();
 router.get("/", getAllPartners);
 
 // CRUD للادمن
-router.post("/", verifyToken, isAdmin, upload.single("logo"), createPartner);
+router.post("/", verifyToken, isAdmin, upload.single("logo"), compressImage, createPartner);
 router.get("/:id", getPartnerById);
-router.put("/:id", verifyToken, isAdmin, upload.single("logo"), updatePartner);
+router.put("/:id", verifyToken, isAdmin, upload.single("logo"), compressImage, updatePartner);
 router.delete("/:id", verifyToken, isAdmin, deletePartner);
 
 export default router;

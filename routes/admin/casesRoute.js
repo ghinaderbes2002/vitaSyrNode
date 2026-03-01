@@ -8,7 +8,7 @@ import {
   deleteCase,
   getCaseById,
 } from "../../controllers/admin/casesController.js";
-import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
+import { upload, compressImage } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
 
 
@@ -29,7 +29,7 @@ router.put("/:id",verifyToken, isAdmin, updateCase);
 
 
 // رفع صور
-router.post("/:id/images", upload.single("image"), addCaseImage);
+router.post("/:id/images", upload.single("image"), compressImage, addCaseImage);
 
 // إضافة ملاحظة
 router.post("/:id/notes", addCaseNote);

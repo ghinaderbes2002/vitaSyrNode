@@ -11,7 +11,7 @@ import {
 } from "../../controllers/admin/sponsorshipController.js";
 
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
-import { upload } from "../../middlewares/upload.js";
+import { upload, compressImage } from "../../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -32,6 +32,7 @@ router.post(
     { name: "caseImage", maxCount: 1 },
     { name: "videoUrl", maxCount: 1 },
   ]),
+  compressImage,
   createCase
 );
 
@@ -47,6 +48,7 @@ router.put(
     { name: "caseImage", maxCount: 1 },
     { name: "videoUrl", maxCount: 1 },
   ]),
+  compressImage,
   updateCase
 );
 

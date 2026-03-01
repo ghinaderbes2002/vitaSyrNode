@@ -18,7 +18,7 @@ import {
   addVideo,
   deleteVideo,
 } from "../../controllers/admin/productsController.js";
-import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
+import { upload, compressImage } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
 
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
 
@@ -62,6 +62,7 @@ router.post(
   verifyToken,
   isAdmin,
   upload.single("image"),
+  compressImage,
   addImage
 );
 router.delete("/products/:id/images/:imgid", verifyToken, isAdmin, deleteImage);

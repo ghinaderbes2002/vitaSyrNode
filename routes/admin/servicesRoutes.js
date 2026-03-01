@@ -15,7 +15,7 @@ import {
   deleteImage,
 } from "../../controllers/admin/servicesController.js";
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
-import { upload } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
+import { upload, compressImage } from "../../middlewares/upload.js"; // لو حطينا Multer هنا
 
 
 const router = express.Router();
@@ -43,6 +43,7 @@ router.post(
   verifyToken,
   isAdmin,
   upload.single("image"),
+  compressImage,
   addImage
 );
 router.delete("/:id/images/:imgid", verifyToken, isAdmin, deleteImage);

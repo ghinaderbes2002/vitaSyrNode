@@ -11,7 +11,7 @@ import {
 } from "../../controllers/admin/successStoriesController.js";
 
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
-import { upload } from "../../middlewares/upload.js";
+import { upload, compressImage } from "../../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -29,6 +29,7 @@ router.post(
     { name: "afterImage", maxCount: 1 },
     { name: "videoUrl", maxCount: 1 }, // رفع فيديو
   ]),
+  compressImage,
   createStory
 );
 
@@ -43,6 +44,7 @@ router.put(
     { name: "afterImage", maxCount: 1 },
     { name: "videoUrl", maxCount: 1 },
   ]),
+  compressImage,
   updateStory
 );
 
@@ -56,6 +58,7 @@ router.post(
   verifyToken,
   isAdmin,
   upload.single("imageUrl"),
+  compressImage,
   createMilestone
 );
 
@@ -64,6 +67,7 @@ router.put(
   verifyToken,
   isAdmin,
   upload.single("imageUrl"),
+  compressImage,
   updateMilestone
 );
 

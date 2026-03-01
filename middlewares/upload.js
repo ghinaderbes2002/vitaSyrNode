@@ -1,5 +1,7 @@
 import multer from "multer";
 import path from "path";
+import sharp from "sharp";
+import fs from "fs";
 
 // تخزين محلي
 const storage = multer.diskStorage({
@@ -44,3 +46,43 @@ export const upload = multer({
     fileSize: 100 * 1024 * 1024, // 100MB max file size
   }
 });
+
+const ONE_MB = 1024 * 1024;
+
+const compressFile = async (file) => {
+  if (!file.mimetype.startsWith("image/") || file.size <= ONE_MB) return;
+
+  const ext = path.extname(file.path).toLowerCase();
+  const compressedPath = file.path.replace(ext, `_c${ext}`);
+
+  let sharpInstance = sharp(file.path);
+  if (ext === ".png") sharpInstance = sharpInstance.png({ quality: 80 });
+  else if (ext === ".webp") sharpInstance = sharpInstance.webp({ quality: 80 });
+  else sharpInstance = sharpInstance.jpeg({ quality: 80 });
+
+  await sharpInstance.toFile(compressedPath);
+  fs.unlinkSync(file.path);
+  fs.renameSync(compressedPath, file.path);
+  file.size = fs.statSync(file.path).size;
+};
+
+// middleware لضغط الصور تلقائياً إذا كانت أكبر من 1MB (يدعم single و fields)
+export const compressImage = async (req, res, next) => {
+  try {
+    const promises = [];
+
+    if (req.file) promises.push(compressFile(req.file));
+
+    if (req.files) {
+      const files = Array.isArray(req.files)
+        ? req.files
+        : Object.values(req.files).flat();
+      files.forEach((file) => promises.push(compressFile(file)));
+    }
+
+    await Promise.all(promises);
+    next();
+  } catch (err) {
+    next(err);
+  }
+};

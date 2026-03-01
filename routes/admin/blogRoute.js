@@ -12,7 +12,7 @@ import {
 } from "../../controllers/admin/blogController.js";
 
 import { verifyToken, isAdmin } from "../../middlewares/authMiddleware.js";
-import { upload } from "../../middlewares/upload.js";
+import { upload, compressImage } from "../../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -34,6 +34,7 @@ router.post(
   verifyToken,
   isAdmin,
   upload.single("featuredImage"),
+  compressImage,
   createPost
 );
 
@@ -44,6 +45,7 @@ router.put(
   verifyToken,
   isAdmin,
   upload.single("featuredImage"),
+  compressImage,
   updatePost
 );
 
