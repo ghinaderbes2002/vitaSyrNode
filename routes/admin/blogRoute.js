@@ -19,7 +19,7 @@ const router = express.Router();
 // =======================
 // الفئات
 // =======================
-router.get("/blog-categories", verifyToken, isAdmin, getAllCategories);
+router.get("/blog-categories", isAdmin, getAllCategories);
 router.post("/blog-categories", verifyToken, isAdmin, createCategory);
 router.put("/blog-categories/:id", verifyToken, isAdmin, updateCategory);
 router.delete("/blog-categories/:id", verifyToken, isAdmin, deleteCategory);
@@ -31,14 +31,13 @@ router.get("/blog-posts",  getAllPosts);
 
 router.post(
   "/blog-posts",
-  verifyToken,
   isAdmin,
   upload.single("featuredImage"),
   compressImage,
   createPost
 );
 
-router.get("/blog-posts/:id", verifyToken, isAdmin, getPostById);
+router.get("/blog-posts/:id",  isAdmin, getPostById);
 
 router.put(
   "/blog-posts/:id",
