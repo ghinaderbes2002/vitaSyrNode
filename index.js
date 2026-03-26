@@ -13,6 +13,7 @@ import productsRoute from "./routes/admin/productsRoute.js";
 import servicesRoute from "./routes/admin/servicesRoutes.js";
 import successStoriesRoute from "./routes/admin/successStoriesRoutes.js";
 import sponsorshipRoute from "./routes/admin/sponsorshipRoutes.js";
+import jobsExternalRoute from "./routes/external/jobsExternalRoute.js";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -65,6 +66,7 @@ app.use("/jobs", jobsRoute);
 app.use("/partnerships", partnershipsRoute);
 app.use("/contact", contactRoute);
 app.use("/sponsorship", sponsorshipRoute);
+app.use("/external", jobsExternalRoute);
 
 const PORT = process.env.PORT || 3010;
 

@@ -19,23 +19,17 @@ export const getAllApplications = async (req, res) => {
 export const createApplication = async (req, res) => {
   try {
     const {
-      fullName,
-      email,
-      phone,
-      specialization,
-      yearsOfExperience,
-      education,
-      coverLetter,
-      linkedinUrl,
+      fullName, email, phone, specialization,
+      yearsOfExperience, education, coverLetter, linkedinUrl,
+      ref1Name, ref1Company, ref1JobTitle, ref1Phone,
+      ref2Name, ref2Company, ref2JobTitle, ref2Phone,
     } = req.body;
 
     if (
-      !fullName ||
-      !email ||
-      !phone ||
-      !specialization ||
-      !yearsOfExperience ||
-      !education
+      !fullName || !email || !phone || !specialization ||
+      !yearsOfExperience || !education ||
+      !ref1Name || !ref1Company || !ref1JobTitle || !ref1Phone ||
+      !ref2Name || !ref2Company || !ref2JobTitle || !ref2Phone
     ) {
       return res.status(400).json({ message: "يرجى ملء كل الحقول المطلوبة" });
     }
@@ -44,30 +38,23 @@ export const createApplication = async (req, res) => {
 
     const application = await prisma.jobApplication.create({
       data: {
-        fullName,
-        email,
-        phone,
-        specialization,
+        fullName, email, phone, specialization,
         yearsOfExperience: parseInt(yearsOfExperience, 10),
-        education,
-        cvFileUrl,
+        education, cvFileUrl,
         coverLetter: coverLetter || null,
         linkedinUrl: linkedinUrl || null,
+        ref1Name, ref1Company, ref1JobTitle, ref1Phone,
+        ref2Name, ref2Company, ref2JobTitle, ref2Phone,
         status: "PENDING",
       },
     });
 
-    // إرسال إيميل مع CV كمرفق
     const cvFilePath = req.file ? path.resolve(req.file.path) : null;
     sendJobApplicationNotification({
-      fullName,
-      email,
-      phone,
-      specialization,
-      yearsOfExperience,
-      education,
-      coverLetter,
-      linkedinUrl,
+      fullName, email, phone, specialization,
+      yearsOfExperience, education, coverLetter, linkedinUrl,
+      ref1Name, ref1Company, ref1JobTitle, ref1Phone,
+      ref2Name, ref2Company, ref2JobTitle, ref2Phone,
       cvFilePath,
     });
 

@@ -426,9 +426,22 @@ model JobApplication {
   cvFileUrl         String
   coverLetter       String?
   linkedinUrl       String?
+
+  ref1Name          String
+  ref1Company       String
+  ref1JobTitle      String
+  ref1Phone         String
+
+  ref2Name          String
+  ref2Company       String
+  ref2JobTitle      String
+  ref2Phone         String
+
   status            JobStatus
   reviewedById      String?
   reviewNotes       String?
+  rejectionNote     String?
+  rating            Int?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -437,9 +450,10 @@ model JobApplication {
 
 enum JobStatus {
   PENDING
-  REVIEWED
+  INTERVIEW_READY
   ACCEPTED
   REJECTED
+  HIRED
 }
 
 // PARTNERSHIP INQUIRIES

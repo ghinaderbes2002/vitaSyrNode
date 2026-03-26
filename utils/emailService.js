@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // إشعار للإدارة عند وصول طلب توظيف جديد مع CV
-export const sendJobApplicationNotification = async ({ fullName, email, phone, specialization, yearsOfExperience, education, coverLetter, linkedinUrl, cvFilePath }) => {
+export const sendJobApplicationNotification = async ({ fullName, email, phone, specialization, yearsOfExperience, education, coverLetter, linkedinUrl, cvFilePath, ref1Name, ref1Company, ref1JobTitle, ref1Phone, ref2Name, ref2Company, ref2JobTitle, ref2Phone }) => {
   try {
     const attachments = [];
     if (cvFilePath) {
@@ -39,6 +39,21 @@ export const sendJobApplicationNotification = async ({ fullName, email, phone, s
               <tr><td style="padding: 8px 0; color: #555;"><strong>سنوات الخبرة:</strong></td><td style="padding: 8px 0;">${yearsOfExperience} سنوات</td></tr>
               <tr><td style="padding: 8px 0; color: #555;"><strong>التعليم:</strong></td><td style="padding: 8px 0;">${education}</td></tr>
               ${linkedinUrl ? `<tr><td style="padding: 8px 0; color: #555;"><strong>LinkedIn:</strong></td><td style="padding: 8px 0;"><a href="${linkedinUrl}">${linkedinUrl}</a></td></tr>` : ""}
+            </table>
+            <h3 style="color: #14532d; margin-top: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">المراجع</h3>
+            <h4 style="color: #374151; margin-top: 15px;">المرجع الأول</h4>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 6px 0; color: #555; width: 160px;"><strong>الاسم:</strong></td><td>${ref1Name}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>الشركة:</strong></td><td>${ref1Company}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>المسمى الوظيفي:</strong></td><td>${ref1JobTitle}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>رقم التواصل:</strong></td><td>${ref1Phone}</td></tr>
+            </table>
+            <h4 style="color: #374151; margin-top: 15px;">المرجع الثاني</h4>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 6px 0; color: #555; width: 160px;"><strong>الاسم:</strong></td><td>${ref2Name}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>الشركة:</strong></td><td>${ref2Company}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>المسمى الوظيفي:</strong></td><td>${ref2JobTitle}</td></tr>
+              <tr><td style="padding: 6px 0; color: #555;"><strong>رقم التواصل:</strong></td><td>${ref2Phone}</td></tr>
             </table>
             ${coverLetter ? `
             <div style="margin-top: 20px; background: #f0fdf4; padding: 15px; border-radius: 8px; border-right: 4px solid #16a34a;">
