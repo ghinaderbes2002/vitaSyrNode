@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-https://vitaxirpro.com/external
+https://vitaxirpro.com/api/external
 ```
 
 ## Authentication
@@ -17,7 +17,7 @@ x-api-key: 8d57edc1234696d504eb9d24187bc5d311aedf70a53ec963e8823eff7e05ae3a
 
 ### 1. جلب جميع الطلبات
 ```
-GET /external/job-applications
+GET /api/external/job-applications
 ```
 
 **Query Parameters (اختيارية):**
@@ -29,7 +29,7 @@ GET /external/job-applications
 
 **مثال:**
 ```
-GET /external/job-applications?status=PENDING&page=1&limit=10
+GET /api/external/job-applications?status=PENDING&page=1&limit=10
 ```
 
 **Response:**
@@ -76,12 +76,12 @@ GET /external/job-applications?status=PENDING&page=1&limit=10
 
 ### 2. جلب طلب واحد
 ```
-GET /external/job-applications/:id
+GET /api/external/job-applications/:id
 ```
 
 **مثال:**
 ```
-GET /external/job-applications/abc123-uuid
+GET /api/external/job-applications/abc123-uuid
 ```
 
 **Response:** نفس شكل الـ object الواحد من المصفوفة أعلاه.
@@ -95,7 +95,7 @@ GET /external/job-applications/abc123-uuid
 
 ### 3. تحديث حالة الطلب
 ```
-PUT /external/job-applications/:id
+PUT /api/external/job-applications/:id
 ```
 
 **Request Body:**
@@ -142,7 +142,7 @@ PUT /external/job-applications/:id
 
 ### 4. إحصائيات الطلبات
 ```
-GET /external/job-applications/stats
+GET /api/external/job-applications/stats
 ```
 
 **Response:**

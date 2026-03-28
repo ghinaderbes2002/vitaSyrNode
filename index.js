@@ -66,7 +66,7 @@ app.use("/jobs", jobsRoute);
 app.use("/partnerships", partnershipsRoute);
 app.use("/contact", contactRoute);
 app.use("/sponsorship", sponsorshipRoute);
-app.use("/api/external", jobsExternalRoute);
+app.use("/external", jobsExternalRoute);
 
 const PORT = process.env.PORT || 3010;
 
