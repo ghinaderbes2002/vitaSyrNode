@@ -45,6 +45,12 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: 3010
       JWT_SECRET: ${JWT_SECRET}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      CONTACT_RECEIVER_EMAIL: ${CONTACT_RECEIVER_EMAIL}
+      EXTERNAL_API_KEY: ${EXTERNAL_API_KEY}
       # Additional environment variables
       TZ: UTC
     volumes:
