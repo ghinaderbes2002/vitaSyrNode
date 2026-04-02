@@ -2,6 +2,128 @@
 
 ---
 
+## ⚡ تعديلات جديدة - حقلا "هل تعمل حالياً" و "إمكانية الالتحاق"
+
+### أ. إضافة للـ Types
+في `JobApplication` interface أضف:
+```typescript
+currentlyEmployed?: boolean | null;
+availabilityToJoin?: "IMMEDIATE" | "WITHIN_ONE_WEEK" | "WITHIN_TWO_WEEKS" | "WITHIN_ONE_MONTH" | null;
+```
+
+في `CreateJobApplicationDto` أضف:
+```typescript
+currentlyEmployed?: boolean;
+availabilityToJoin?: "IMMEDIATE" | "WITHIN_ONE_WEEK" | "WITHIN_TWO_WEEKS" | "WITHIN_ONE_MONTH";
+```
+
+---
+
+### ب. إضافة state variables في فورم join-us
+```typescript
+const [currentlyEmployed, setCurrentlyEmployed] = useState<boolean | null>(null);
+const [availabilityToJoin, setAvailabilityToJoin] = useState("");
+```
+
+---
+
+### ج. إضافة الحقلين في createWithCV call
+```typescript
+currentlyEmployed: currentlyEmployed ?? undefined,
+availabilityToJoin: availabilityToJoin || undefined,
+```
+
+---
+
+### د. إضافة الحقلين في FormData (في API Client)
+**الملف:** `src/lib/api/jobs.ts`
+```typescript
+if (applicationData.currentlyEmployed !== undefined && applicationData.currentlyEmployed !== null) {
+  formData.append("currentlyEmployed", String(applicationData.currentlyEmployed));
+}
+if (applicationData.availabilityToJoin) {
+  formData.append("availabilityToJoin", applicationData.availabilityToJoin);
+}
+```
+
+---
+
+### ه. إضافة قسم الحقلين في الفورم (بعد LinkedIn وقبل قسم المراجع)
+```tsx
+{/* هل تعمل حالياً */}
+<div>
+  <label className="block text-gray-700 font-bold mb-3">هل تعمل حالياً؟</label>
+  <div className="flex gap-4">
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input type="radio" name="currentlyEmployed" value="true"
+        checked={currentlyEmployed === true}
+        onChange={() => setCurrentlyEmployed(true)}
+        className="w-4 h-4 accent-primary-500" />
+      <span>نعم</span>
+    </label>
+    <label className="flex items-center gap-2 cursor-pointer">
+      <input type="radio" name="currentlyEmployed" value="false"
+        checked={currentlyEmployed === false}
+        onChange={() => setCurrentlyEmployed(false)}
+        className="w-4 h-4 accent-primary-500" />
+      <span>لا</span>
+    </label>
+  </div>
+</div>
+
+{/* إمكانية الالتحاق */}
+<div>
+  <label className="block text-gray-700 font-bold mb-3">إمكانية الالتحاق</label>
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    {[
+      { value: "IMMEDIATE", label: "فوري" },
+      { value: "WITHIN_ONE_WEEK", label: "خلال أسبوع" },
+      { value: "WITHIN_TWO_WEEKS", label: "خلال أسبوعين" },
+      { value: "WITHIN_ONE_MONTH", label: "خلال شهر" },
+    ].map((option) => (
+      <label key={option.value}
+        className={`flex items-center justify-center p-3 border-2 rounded-xl cursor-pointer transition-colors
+          ${availabilityToJoin === option.value
+            ? "border-accent-500 bg-accent-50 text-accent-700 font-semibold"
+            : "border-gray-200 hover:border-accent-300"}`}>
+        <input type="radio" name="availabilityToJoin" value={option.value}
+          checked={availabilityToJoin === option.value}
+          onChange={() => setAvailabilityToJoin(option.value)}
+          className="hidden" />
+        {option.label}
+      </label>
+    ))}
+  </div>
+</div>
+```
+
+---
+
+### و. إضافة reset بعد النجاح
+```typescript
+setCurrentlyEmployed(null);
+setAvailabilityToJoin("");
+```
+
+---
+
+### ز. عرضهم في داشبورد تفاصيل الطلب
+```tsx
+<div><label className="text-sm text-gray-500">هل يعمل حالياً</label>
+  <p>{application.currentlyEmployed === true ? "نعم" : application.currentlyEmployed === false ? "لا" : "—"}</p>
+</div>
+<div><label className="text-sm text-gray-500">إمكانية الالتحاق</label>
+  <p>{{
+    IMMEDIATE: "فوري",
+    WITHIN_ONE_WEEK: "خلال أسبوع",
+    WITHIN_TWO_WEEKS: "خلال أسبوعين",
+    WITHIN_ONE_MONTH: "خلال شهر",
+  }[application.availabilityToJoin ?? ""] ?? "—"}</p>
+</div>
+```
+
+---
+
 ## 1. تحديث Types
 **الملف:** `src/types/jobApplication.ts`
 
@@ -151,12 +273,13 @@ setRef2Name(""); setRef2Company(""); setRef2JobTitle(""); setRef2Phone("");
 ### و. إضافة قسم المراجع في الفورم (بعد LinkedIn وقبل زر الإرسال)
 ```tsx
 <div className="border-t-2 border-gray-200 pt-6 mt-6">
-  <div className="flex items-center gap-3 mb-6">
+  <div className="flex items-center gap-3 mb-2">
     <div className="p-2 bg-primary-100 rounded-lg">
       <Users className="w-5 h-5 text-primary-500" />
     </div>
     <h3 className="text-xl font-bold text-gray-900">المراجع</h3>
   </div>
+  <p className="text-sm text-gray-500 mb-6">ملاحظة: يرجى تزويدنا بمعلومات شخصين يمكن التواصل معهم للتحقق من خبرتك المهنية.</p>
 
   {/* المرجع الأول */}
   <div className="mb-6">

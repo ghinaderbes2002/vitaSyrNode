@@ -437,6 +437,9 @@ model JobApplication {
   ref2JobTitle      String
   ref2Phone         String
 
+  currentlyEmployed Boolean?
+  availabilityToJoin AvailabilityToJoin?
+
   status            JobStatus
   reviewedById      String?
   reviewNotes       String?
@@ -454,6 +457,13 @@ enum JobStatus {
   ACCEPTED
   REJECTED
   HIRED
+}
+
+enum AvailabilityToJoin {
+  IMMEDIATE
+  WITHIN_ONE_WEEK
+  WITHIN_TWO_WEEKS
+  WITHIN_ONE_MONTH
 }
 
 // PARTNERSHIP INQUIRIES
