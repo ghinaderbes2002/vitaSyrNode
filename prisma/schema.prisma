@@ -221,13 +221,13 @@ model Product {
   categoryId      String
   name            String
   slug            String   @unique
-  productType     String?
-  description     String
-  specifications  String
-  price           Float
+  productType     String
+  description     String?
+  specifications  String?
+  price           Float?
   isPriceVisible  Boolean  @default(true)
-  metaTitle       String
-  metaDescription String
+  metaTitle       String?
+  metaDescription String?
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

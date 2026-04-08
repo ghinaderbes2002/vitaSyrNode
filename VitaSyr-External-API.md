@@ -55,6 +55,8 @@ GET /api/external/job-applications?status=PENDING&page=1&limit=10
       "ref2Company": "شركة XYZ",
       "ref2JobTitle": "مهندس أول",
       "ref2Phone": "+963-11-222-2222",
+      "currentlyEmployed": true,
+      "availabilityToJoin": "WITHIN_ONE_WEEK",
       "status": "PENDING",
       "reviewNotes": null,
       "rejectionNote": null,
@@ -168,6 +170,16 @@ https://vitaxirpro.com{cvFileUrl}
 ```
 https://vitaxirpro.com/uploads/1234567890.pdf
 ```
+
+---
+
+## قيم availabilityToJoin
+| القيمة | المعنى |
+|---|---|
+| `IMMEDIATE` | فوري |
+| `WITHIN_ONE_WEEK` | خلال أسبوع |
+| `WITHIN_TWO_WEEKS` | خلال أسبوعين |
+| `WITHIN_ONE_MONTH` | خلال شهر |
 
 ---
 
