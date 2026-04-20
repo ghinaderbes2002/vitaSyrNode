@@ -23,15 +23,24 @@ export const createApplication = async (req, res) => {
       yearsOfExperience, education, coverLetter, linkedinUrl,
       ref1Name, ref1Company, ref1JobTitle, ref1Phone,
       ref2Name, ref2Company, ref2JobTitle, ref2Phone,
+      currentlyEmployed, availabilityToJoin, hasCompanyRelation,
+      neverWorked,
     } = req.body;
+
+    const hasRefs = !neverWorked || neverWorked === "false";
 
     if (
       !fullName || !email || !phone || !specialization ||
-      !yearsOfExperience || !education ||
-      !ref1Name || !ref1Company || !ref1JobTitle || !ref1Phone ||
-      !ref2Name || !ref2Company || !ref2JobTitle || !ref2Phone
+      !yearsOfExperience || !education
     ) {
       return res.status(400).json({ message: "يرجى ملء كل الحقول المطلوبة" });
+    }
+
+    if (hasRefs && (
+      !ref1Name || !ref1Company || !ref1JobTitle || !ref1Phone ||
+      !ref2Name || !ref2Company || !ref2JobTitle || !ref2Phone
+    )) {
+      return res.status(400).json({ message: "يرجى ملء كل حقول المراجع" });
     }
 
     const cvFileUrl = req.file ? `/uploads/${req.file.filename}` : null;
@@ -43,8 +52,17 @@ export const createApplication = async (req, res) => {
         education, cvFileUrl,
         coverLetter: coverLetter || null,
         linkedinUrl: linkedinUrl || null,
-        ref1Name, ref1Company, ref1JobTitle, ref1Phone,
-        ref2Name, ref2Company, ref2JobTitle, ref2Phone,
+        ref1Name: ref1Name || "",
+        ref1Company: ref1Company || "",
+        ref1JobTitle: ref1JobTitle || "",
+        ref1Phone: ref1Phone || "",
+        ref2Name: ref2Name || "",
+        ref2Company: ref2Company || "",
+        ref2JobTitle: ref2JobTitle || "",
+        ref2Phone: ref2Phone || "",
+        currentlyEmployed: currentlyEmployed === "true" ? true : currentlyEmployed === "false" ? false : null,
+        availabilityToJoin: availabilityToJoin || null,
+        hasCompanyRelation: hasCompanyRelation === "true" ? true : hasCompanyRelation === "false" ? false : null,
         status: "PENDING",
       },
     });

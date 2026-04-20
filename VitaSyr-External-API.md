@@ -57,6 +57,7 @@ GET /api/external/job-applications?status=PENDING&page=1&limit=10
       "ref2Phone": "+963-11-222-2222",
       "currentlyEmployed": true,
       "availabilityToJoin": "WITHIN_ONE_WEEK",
+      "hasCompanyRelation": false,
       "status": "PENDING",
       "reviewNotes": null,
       "rejectionNote": null,
@@ -170,6 +171,16 @@ https://vitaxirpro.com{cvFileUrl}
 ```
 https://vitaxirpro.com/uploads/1234567890.pdf
 ```
+
+---
+
+## الحقول الإضافية في Response
+
+| الحقل | النوع | الوصف |
+|---|---|---|
+| `currentlyEmployed` | boolean / null | هل يعمل حالياً |
+| `availabilityToJoin` | string / null | إمكانية الالتحاق |
+| `hasCompanyRelation` | boolean / null | هل لديه صلة بموظف أو مورد |
 
 ---
 

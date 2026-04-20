@@ -437,8 +437,9 @@ model JobApplication {
   ref2JobTitle      String
   ref2Phone         String
 
-  currentlyEmployed Boolean?
+  currentlyEmployed  Boolean?
   availabilityToJoin AvailabilityToJoin?
+  hasCompanyRelation Boolean?
 
   status            JobStatus
   reviewedById      String?
