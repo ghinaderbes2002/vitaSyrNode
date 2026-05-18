@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
   }
 
   // التحقق من ملفات PDF (للسير الذاتية)
-  if (mimetype === 'application/pdf' && extname === '.pdf') {
+  if (extname === '.pdf') {
     return cb(null, true);
   }
 
