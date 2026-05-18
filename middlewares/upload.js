@@ -31,12 +31,12 @@ const fileFilter = (req, file, cb) => {
     return cb(null, true);
   }
 
-  // التحقق من ملفات PDF (للسير الذاتية)
-  if (extname === '.pdf') {
+  // التحقق من ملفات PDF و Word (للسير الذاتية)
+  if (extname === '.pdf' || extname === '.doc' || extname === '.docx') {
     return cb(null, true);
   }
 
-  cb(new Error('Only image, video, and PDF files are allowed!'));
+  cb(new Error('Only image, video, PDF, and Word files are allowed!'));
 };
 
 export const upload = multer({
