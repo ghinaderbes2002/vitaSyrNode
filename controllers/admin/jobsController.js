@@ -80,7 +80,7 @@ export const createApplication = async (req, res) => {
   } catch (error) {
     console.error(error);
     if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-      return res.status(409).json({ message: "طلبك موجود مسبقاً، تواصل معنا عبر واتساب للتأكيد" });
+      return res.status(409).json({ message: "تم استلام طلبك مسبقاً، سنتواصل معك قريباً" });
     }
     res.status(500).json({ message: error.message });
   }
