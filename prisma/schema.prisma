@@ -418,7 +418,7 @@ enum PaymentStatus {
 model JobApplication {
   id                String   @id @default(uuid())
   fullName          String
-  email             String
+  email             String   @unique
   phone             String
   specialization    String
   yearsOfExperience Int
