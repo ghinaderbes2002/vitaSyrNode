@@ -79,7 +79,7 @@ export const createApplication = async (req, res) => {
     res.status(201).json(application);
   } catch (error) {
     console.error(error);
-    if (error.code === "P2002" && error.meta?.target?.includes("email")) {
+    if (error.code === "P2002") {
       return res.status(409).json({ message: "تم استلام طلبك مسبقاً، سنتواصل معك قريباً" });
     }
     res.status(500).json({ message: error.message });

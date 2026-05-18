@@ -418,7 +418,7 @@ enum PaymentStatus {
 model JobApplication {
   id                String   @id @default(uuid())
   fullName          String
-  email             String   @unique
+  email             String
   phone             String
   specialization    String
   yearsOfExperience Int
@@ -450,6 +450,8 @@ model JobApplication {
   updatedAt         DateTime @updatedAt
 
   reviewedBy User? @relation(fields: [reviewedById], references: [id])
+
+  @@unique([email, fullName])
 }
 
 enum JobStatus {
